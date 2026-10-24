@@ -1,0 +1,31 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Seul l'administrateur (connexion par e-mail et mot de passe) peut lire ou écrire ses données.
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email.lower() == 'maisonainari@gmail.com';
+    }
+
+    // Réponses clients : n'importe qui peut en ENVOYER une (formulaire de consultation),
+    // mais personne d'autre que l'administrateur ne peut les lire, les modifier ou les supprimer.
+    match /submissions/{docId} {
+      allow create: if isAdmin() || (
+        request.resource.data.keys().hasOnly(['id', 'date', 'consultation', 'preferences'])
+        && request.resource.data.keys().hasAll(['id', 'date', 'consultation', 'preferences'])
+        && request.resource.data.id is string
+        && request.resource.data.id == docId
+        && request.resource.data.consultation is map
+        && request.resource.data.preferences is map
+      );
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Bibliothèque, formules, analyses, brouillons : administrateur uniquement.
+    match /{coll}/{docId} {
+      allow read, write: if isAdmin()
+        && coll in ['materials', 'formulas', 'analyses', 'drafts'];
+    }
+  }
+}
