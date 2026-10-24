@@ -4353,9 +4353,12 @@ function detectIngredientsFromText(text) {
     const nt = tok(nn), head = nt.slice(0, 3).join(" ");
     let best = null, bestScore = 0;
     libNorm.forEach(x => {
-      const loose = x.mn.includes(nn) || nn.includes(x.mn) || (head.length > 2 && x.mn.startsWith(head));
+      const mt2 = tok(x.mn);
+      // mots dans un autre ordre (ex. "Diffusion Accord" pour "Accord Diffusion") : tous les mots de la matière sont présents
+      const sameWords = mt2.length >= 2 && mt2.every(t2 => nt.includes(t2));
+      const loose = x.mn.includes(nn) || nn.includes(x.mn) || sameWords || (head.length > 2 && x.mn.startsWith(head));
       if (!loose) return;
-      const mt2 = tok(x.mn), common = nt.filter(t2 => mt2.includes(t2)).length;
+      const common = nt.filter(t2 => mt2.includes(t2)).length;
       const score = common / (nt.length + mt2.length - common);
       if (score > bestScore) { best = x.mt; bestScore = score; }
     });
