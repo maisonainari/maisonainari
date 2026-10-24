@@ -793,6 +793,13 @@ const I18N = {
     rail_foot: "Les données restent dans ce navigateur, propres à cet outil.",
     lang_toggle: "English",
     lib_title: "Bibliothèque de matières premières",
+    ml_title: "Dosage en ml",
+    ml_sub: "Volume de chaque matière pour la quantité de concentré voulue (formule non diluée).",
+    ml_total_label: "Concentré total (ml)",
+    ml_col_material: "Matière",
+    ml_total: "Total",
+    ml_note: "Calcul en volume : les pourcentages sont traités comme des volumes (densités non prises en compte). Pour une pesée précise, tenez compte de la densité de chaque matière.",
+    ml_total_warn: "Le total des pourcentages est de {total} % : les volumes sont proportionnels, pour que la somme fasse exactement le volume demandé.",
     lib_save_btn: "Enregistrer la bibliothèque",
     lib_unsaved: "Modifications non enregistrées",
     lib_saved: "Bibliothèque à jour",
@@ -1180,6 +1187,13 @@ const I18N = {
     rail_foot: "Your data stays in this browser, local to this tool.",
     lang_toggle: "Français",
     lib_title: "Raw materials library",
+    ml_title: "Dosage in ml",
+    ml_sub: "Volume of each material for the amount of concentrate you want (undiluted formula).",
+    ml_total_label: "Total concentrate (ml)",
+    ml_col_material: "Material",
+    ml_total: "Total",
+    ml_note: "Calculated by volume: percentages are treated as volumes (densities not taken into account). For precise weighing, account for each material's density.",
+    ml_total_warn: "The percentages add up to {total}%: volumes are proportional so that they sum to exactly the requested volume.",
     lib_save_btn: "Save library",
     lib_unsaved: "Unsaved changes",
     lib_saved: "Library up to date",
@@ -4176,6 +4190,7 @@ function classificationLabel(cls) {
     : t("group_"+cls.primary+"_label");
 }
 
+let azVolume = 1;
 let analyzerDraft = { name:"", dilution:20, ingredients:[], pasteText:"" };
 const ANALYZER_DILUTION_PRESETS = [10,20,25,30,40];
 let detectedIngredients = [];
@@ -4284,11 +4299,17 @@ function detectIngredientsFromText(text) {
   // Étape 1 : "nom ... valeur" sur la même ligne, valeur en fin de ligne
   const inlineHits = [];
   rawLines.forEach(line => {
-    const m = line.match(trailingNumber);
-    if (!m) return;
+    let m = line.match(trailingNumber), cut;
+    if (m) cut = m.index;
+    else {
+      // ligne du type "- Camphre — 1 % : commentaire" : la valeur suit le nom, un commentaire peut suivre
+      const m2 = line.match(/^(.*?\S)\s+[—–-]\s*(\d+(?:[.,]\d+)?)\s*(%)/);
+      if (!m2) return;
+      m = [m2[0], m2[2], m2[3]]; cut = m2[1].length;
+    }
     const value = parseNumber(m[1]);
     if (value === null || value <= 0) return;
-    const name = cleanName(line.slice(0, m.index));
+    const name = cleanName(line.slice(0, cut));
     if (name.length < 2 || name.length > 90) return;
     if (/\d{4,}/.test(name)) return; // écarte les codes/dates (ex. 20260822) confondus avec un nom
     if (SKIP_NAMES.includes(normalize(name))) return; // écarte les lignes "Total"
@@ -4318,17 +4339,35 @@ function detectIngredientsFromText(text) {
   const hits = inlineHits.length > 0 ? inlineHits : pairedHits;
   volumeModeAuto = hits.length > 0 && !hits.some(h => h.hasPercentSign);
 
-  return hits.map(h => {
-    const nn = normalize(h.name).replace(/[^a-z0-9]+/g, " ").trim();
-    let match = materials.find(mt => normalize(mt.name).replace(/[^a-z0-9]+/g, " ").trim() === nn);
-    if (!match) match = materials.find(mt => {
-      const mn = normalize(mt.name).replace(/[^a-z0-9]+/g, " ").trim();
-      return mn.includes(nn) || nn.includes(mn);
+  const flat = x => normalize(x).replace(/[^a-z0-9]+/g, " ").trim();
+  const libNorm = materials.map(mt => ({ mt, mn: flat(mt.name) }));
+  const tok = x => x.split(/\s+/).filter(Boolean);
+  const stripParens = x => x.replace(/\([^)]*\)/g, " ").replace(/\s+/g, " ").trim();
+  const origLines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  function bestMatch(nn, origName) {
+    // 1) nom exact, parenthèses comprises (ex. "Agarwood Oil "Boya Forte" (Ajmal) 5%")
+    if (origName) { const ex0 = libNorm.find(x => x.mn === flat(origName)); if (ex0) return ex0.mt; }
+    // 2) nom exact sans parenthèses
+    const ex = libNorm.find(x => x.mn === nn); if (ex) return ex.mt;
+    // 3) correspondance approchée : on garde la matière qui partage le plus de mots avec la ligne
+    const nt = tok(nn), head = nt.slice(0, 3).join(" ");
+    let best = null, bestScore = 0;
+    libNorm.forEach(x => {
+      const loose = x.mn.includes(nn) || nn.includes(x.mn) || (head.length > 2 && x.mn.startsWith(head));
+      if (!loose) return;
+      const mt2 = tok(x.mn), common = nt.filter(t2 => mt2.includes(t2)).length;
+      const score = common / (nt.length + mt2.length - common);
+      if (score > bestScore) { best = x.mt; bestScore = score; }
     });
-    if (!match) {
-      const shortName = nn.split(/\s+/).slice(0,3).join(" ");
-      if (shortName.length > 2) match = materials.find(mt => normalize(mt.name).replace(/[^a-z0-9]+/g, " ").trim().startsWith(shortName));
-    }
+    return best;
+  }
+  return hits.map(h => {
+    const nn = flat(h.name);
+    // retrouve la ligne d'origine (avec ses parenthèses) pour un appariement exact
+    const target = h.rawLine.replace(/\s+/g, " ").trim();
+    const orig = origLines.find(l => stripParens(l) === target);
+    const origName = orig ? orig.replace(/^[\s\-–—•·*]+/, "").replace(/\s*[—–-]\s*\d+(?:[.,]\d+)?\s*(%|ml|mL|ML|mg|g|gr)?.*$/, "").trim() : "";
+    const match = bestMatch(nn, origName);
     return { rawLine: h.rawLine, name: h.name, percent: h.value, matchedId: match ? match.id : "" };
   });
 }
@@ -4472,9 +4511,12 @@ function renderAnalyzer() {
   if (addAndAnalyzeBtn) addAndAnalyzeBtn.addEventListener("click", () => {
     if (detectedIngredients.length > 0) {
       // le tableau de revue est déjà affiché : on respecte les choix/modifications faits à l'écran
+      // l'analyse porte exactement sur cette formule : les matières d'une analyse précédente ne sont pas conservées
+      ad.ingredients = [];
       mergeDetectedIntoDraft();
     } else if ((ad.pasteText || "").trim()) {
       // rien n'a encore été détecté à l'écran : on détecte et on ajoute directement les correspondances trouvées
+      ad.ingredients = [];
       detectedIngredients = detectIngredientsFromText(ad.pasteText);
       detectedRan = true;
       volumeMode = volumeModeAuto;
@@ -4538,6 +4580,18 @@ function renderAnalyzerResult() {
       <p class="disclaimer">${t("concentration_disclaimer",{dilution:a.dilution, materials:escapeHtml(a.ingredients.filter(i=>i.purity<100).map(i=>i.name).join(", ")) || t("some_materials"), net:a.totalActiveInFinished.toFixed(2)})}</p>
     </div>
 
+    <div class="panel" id="az-ml-panel">
+      <h3>${t("ml_title")}</h3>
+      <p class="section-sub" style="margin-bottom:0.8rem;">${t("ml_sub")}</p>
+      <div class="field" style="max-width:14rem; margin-bottom:0.9rem;"><label>${t("ml_total_label")}</label><input type="number" id="az-ml-total" min="0.01" step="0.1" value="${azVolume}"></div>
+      <table>
+        <thead><tr><th>${t("ml_col_material")}</th><th>%</th><th>ml</th><th>µl</th></tr></thead>
+        <tbody id="az-ml-body"></tbody>
+      </table>
+      <p class="disclaimer" id="az-ml-warn" style="display:none;"></p>
+      <p class="disclaimer">${t("ml_note")}</p>
+    </div>
+
     <div class="panel">
       <h3>${t("analyzer_result_title")}${a.name ? " — " + escapeHtml(a.name) : ""}</h3>
       <div class="pyramid">
@@ -4596,6 +4650,18 @@ function renderAnalyzerResult() {
 
     <button class="btn" id="az-save-btn">${t("btn_save_analysis")}</button>
   `;
+  const fmtMl = v => (+v.toFixed(4)).toString().replace(".", t("locale").indexOf("en") === 0 ? "." : ",");
+  const renderMlRows = () => {
+    const V = azVolume > 0 ? azVolume : 1, tot = a.totalPercent > 0 ? a.totalPercent : 100;
+    document.getElementById("az-ml-body").innerHTML = a.ingredients.map(i => {
+      const ml = i.percent / tot * V;
+      return `<tr><td>${escapeHtml(i.name)}</td><td>${fmtMl(i.percent)}</td><td><strong>${fmtMl(ml)}</strong></td><td>${fmtMl(ml * 1000)}</td></tr>`;
+    }).join("") + `<tr style="border-top:2px solid var(--line);"><td><strong>${t("ml_total")}</strong></td><td><strong>${fmtMl(tot)}</strong></td><td><strong>${fmtMl(V)}</strong></td><td><strong>${fmtMl(V * 1000)}</strong></td></tr>`;
+    const warn = document.getElementById("az-ml-warn");
+    if (Math.abs(tot - 100) > 0.05) { warn.style.display = ""; warn.textContent = t("ml_total_warn", { total: fmtMl(tot) }); } else warn.style.display = "none";
+  };
+  renderMlRows();
+  document.getElementById("az-ml-total").addEventListener("input", e => { const v = parseFloat(String(e.target.value).replace(",", ".")); if (v > 0) { azVolume = v; renderMlRows(); } });
   const saveBtn = document.getElementById("az-save-btn");
   if (saveBtn) saveBtn.addEventListener("click", () => {
     if (!analyses.some(x => x.id === a.id)) analyses.unshift(a);
