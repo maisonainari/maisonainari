@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<!-- Mise à jour automatique via GitHub : test du 24/10/2026 -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>L'Orgue Aïnâri — atelier de composition</title>
@@ -2763,6 +2762,12 @@ const SEED_DRAFTS = [
     date: "2026-10-14T15:31:00.000Z",
     title: "Accord Blanc — la couleur (concept)",
     content: "Le blanc-couleur, pas le blanc-textile : il s'agit de représenter la couleur blanche elle-même, de façon achromatique — sans jaune (agrumes, jasmin indolé), sans vert franc, sans brun (patchouli, oud, vanille), sans rouge-orangé (épices chaudes). Le blanc, c'est la lumière plate, la transparence, la matité de la craie, le rayonnement sur la peau nue.\n\nTÊTE — la lumière, l'air (12%)\n- Hedione 5% — transparence, diffusion lumineuse\n- Calone (Firmenich) 1% — à peine une touche d'air frais\n- Iso E Super 6% — éclaircit sans teinter\n\nCŒUR — la matière blanche : coton, papier, craie (30%)\n- Cotton Cloud Base 14% — le cœur conceptuel direct\n- Florosa 5% + Majantol 4% — muguet transparent, blanc-vert très pâle\n- Iris Concrete Synth 4% — poudre grise-blanche, effet craie\n- Violette (Feuilles Absolue) 3% — touche verte-poudrée, texture papier\n\nFOND — le rayonnement sur la peau (58%)\n- Ambroxide 4% — le glow, la lumière sur peau nue\n- Habanolide 19% + Galaxolide 7% — les deux musc blancs classiques\n- Sandalwood White (HE) 12% — le bois le plus pâle, laiteux\n- Milk Lactone 3% — rondeur laiteuse discrète\n- Exaltolide (Firmenich) 13% — musc poudré doux, prolonge le blanc\n\nPréparation pour 1 mL de concentré (1000 µL) :\nHedione 50µL · Calone 10µL · Iso E Super 60µL · Cotton Cloud Base 140µL · Florosa 50µL · Majantol 40µL · Iris Concrete Synth 40µL · Violette (Feuilles Absolue) 30µL · Ambroxide 40µL · Habanolide 190µL · Galaxolide 70µL · Sandalwood White (HE) 120µL · Milk Lactone 30µL · Exaltolide 130µL\n\nBase retenue pour le calcul IFRA : EDP à 20%. Le Galaxolide arrive proche du plafond IFRA à cette concentration (93% du maximum) — à surveiller si on pousse la concentration plus haut. Toutes les autres matières restent confortablement sous leur plafond.\n\nFiche complète (pyramide, % nets, statut IFRA par matière) dans Formules enregistrées sous le même nom."
+  },
+  {
+    id: "seed-draft-jannah",
+    date: "2026-10-24T11:40:00.000Z",
+    title: "Jannah — jardin de fruits et de musc (formule)",
+    content: "Idée : un jardin du paradis tel que les textes le décrivent — vignes et fruits, miel, dattes, camphre et gingembre des coupes, musc des sceaux, safran du sol, ambre gris et bois d'oud des encensoirs.\n\nDilution : 20 % dans l'éthanol (extrait). Pourcentages ci-dessous = part de la formule concentrée (total 100). « Net fini » = dosage réel dans le produit fini, comparé à la limite IFRA de la bibliothèque.\n\nTÊTE (15 %)\n- Camphre — 1 % (net 0,2 %) : la fraîcheur de la coupe du paradis, à peine perceptible\n- Gingembre (HE/Extrait) — 4 % (net 0,8 % / max 1,5 %) : l'éclat chaud et citronné\n- Grape Base — 8 % (net 1,6 % / max 5 %) : le raisin, juteux et sucré\n- Isoamyl Acetate — 2 % (net 0,4 % / max 5 %) : la banane, volontairement murmurée\n\nCŒUR (31 %)\n- Safranal — 1 % (net 0,2 % / max 0,3 %) : le safran, très puissant — ne pas dépasser\n- Miel Blanc — 10 % (net 2,0 % / max 3 %) : le miel\n- Datilat (Symrise) — 14 % (net 2,8 % / max 5 %) : la datte confite\n- Ylang Ylang III Essential Oil — 3 % (net 0,6 % / max 0,8 %) : la banane crémeuse, florale\n- Hedione — 3 % (net 0,6 %) : soutien transparent pour faire respirer les fruits (matière ajoutée, hors liste)\n\nFOND (54 %)\n- Ambergris Base Type — 18 % (net 3,6 % / max 10 %) : l'ambre gris\n- Oud Accord II — 8 % (net 1,6 % / max 3 %) : l'oud, balsamique et doux\n- Agarwood Oil \"Boya Forte\" (Ajmal) 5% — 8 % (net 0,08 % / max 0,5 %) : la profondeur animalique de l'oud vrai\n- Musc blanc (synth.) — 14 % (net 2,8 % / max 15 %) : le musc, propre et peau\n- Muscenone — 6 % (net 1,2 % / max 10 %) : le musc rayonnant\n\nTotal : 100 %. Toutes les matières sont sous leur limite IFRA.\n\nÀ vérifier à la préparation : le safranal et l'acétate d'isoamyle sont très puissants, à peser avec précision (solution à 1 % si possible). Laisser macérer 4 semaines minimum puis filtrer à froid avant jugement. Ajuster ensuite le miel et la datte selon la douceur voulue."
   }
 ];
 function loadDrafts() {
@@ -2771,11 +2776,16 @@ function loadDrafts() {
     const raw = localStorage.getItem("orgue_drafts");
     list = raw ? JSON.parse(raw) : [];
   } catch(e) { console.warn("lecture brouillons impossible", e); list = []; }
+  // brouillons fournis d'office : ajoutés une seule fois ; si vous en supprimez un, il ne revient pas
+  let seeded; try { seeded = JSON.parse(localStorage.getItem("orgue_seeded_drafts") || "null"); } catch(e) { seeded = null; }
+  if (!Array.isArray(seeded)) seeded = ["seed-draft-accord-blanc"];
   const existingIds = new Set(list.map(d => d.id));
   let added = false;
   SEED_DRAFTS.forEach(d => {
-    if (!existingIds.has(d.id)) { list.push({...d}); existingIds.add(d.id); added = true; }
+    if (!existingIds.has(d.id) && !seeded.includes(d.id)) { list.push({...d}); existingIds.add(d.id); added = true; }
+    if (!seeded.includes(d.id)) seeded.push(d.id);
   });
+  try { localStorage.setItem("orgue_seeded_drafts", JSON.stringify(seeded)); } catch(e) {}
   if (added) saveDrafts(list);
   return list;
 }
