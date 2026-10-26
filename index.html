@@ -2769,6 +2769,11 @@ const DEFAULT_MATERIALS = [
 function uid() { return Math.random().toString(36).slice(2,10); }
 function normalize(s){ return (s||"").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""); }
 
+/* Musk ketone : limite UE de l'Annexe III (réf. 97) pour le parfum fin = 1,4 % de musk ketone pur dans le produit fini
+   (EDT 0,56 %, autres produits 0,042 %). La norme IFRA (Cat. 4) n'a pas de plafond mais impose moins de 0,1 % de musk xylène. */
+const ADDED_MATERIALS = [
+  {name:"Musk Ketone 10% BB", family:"Musquée", position:"base", volatility:1, ifraMax:1.4, cost:0, purity:10, descriptors:"musc, poudré, doux, sucré", lib:2}
+];
 function loadMaterials() {
   let list = null;
   try {
@@ -2804,6 +2809,17 @@ function loadMaterials() {
   list.forEach(m => {
     if (normalize(m.name) === "galaxolide" && m.ifraMax === 15) { m.ifraMax = 1.5; migrated = true; }
   });
+  // matières ajoutées après coup : insérées une seule fois, puis jamais plus (ce que vous supprimez reste supprimé)
+  let seededNames = [];
+  try { seededNames = JSON.parse(localStorage.getItem("orgue_seeded_materials") || "[]"); } catch(e) {}
+  if (!Array.isArray(seededNames)) seededNames = [];
+  let seededChanged = false;
+  ADDED_MATERIALS.forEach(d => {
+    if (seededNames.includes(d.name)) return;
+    seededNames.push(d.name); seededChanged = true;
+    if (!list.some(m => normalize(m.name) === normalize(d.name))) { list.push({...d, id: uid()}); migrated = true; }
+  });
+  if (seededChanged) { try { localStorage.setItem("orgue_seeded_materials", JSON.stringify(seededNames)); } catch(e) {} }
   if (migrated) saveMaterials(list);
   return list;
 }
