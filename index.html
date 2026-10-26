@@ -617,6 +617,75 @@
   .lib-savebar { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; flex-wrap: wrap; margin: 0.8rem 0 1rem; padding: 0.6rem 0.9rem; background: var(--panel, #fff); border: 1px solid var(--line, #d9cfe8); border-radius: 6px; font-size: 0.88rem; color: var(--ink-soft); }
   .lib-savebar.dirty { border-color: #b8902a; background: #fff6dc; color: #5a3d00; box-shadow: 0 2px 10px rgba(184,144,42,0.35); }
   .lib-savebar.dirty #lib-save-status { font-weight: 600; }
+
+  /* ===== Étagère 3D des matières premières ===== */
+  .lib-tools { display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; }
+  .seg { display:inline-flex; border:1px solid var(--line); border-radius:6px; overflow:hidden; }
+  .seg button { appearance:none; border:0; background:transparent; color:var(--ink-soft); font:inherit; font-size:.82rem; padding:.42rem .85rem; cursor:pointer; }
+  .seg button.on { background:var(--base-tone); color:var(--gold); }
+  .seg button:focus-visible { outline:2px solid var(--gold); outline-offset:-2px; }
+  .shelf3d { --d:64px; --post:26px; --crest:60px; --plinth:30px; --w:42px; --rx:0deg; --ry:0deg;
+    perspective:1700px; perspective-origin:50% 35%; padding:26px 14px 42px; border-radius:8px;
+    background:radial-gradient(ellipse at 50% 0%, #4d2784 0%, #25104a 55%, #170a2e 100%); border:1px solid #6a4aa0; }
+  .shelf3d .cab { position:relative; max-width:1020px; margin:0 auto; padding:var(--crest) var(--post) var(--plinth);
+    transform-style:preserve-3d; transform:rotateX(var(--rx)) rotateY(var(--ry)); transition:transform .25s ease-out;
+    border-radius:34px 34px 4px 4px; box-shadow:0 44px 50px -30px rgba(0,0,0,.75); }
+  .shelf3d .cab-in { position:relative; transform-style:preserve-3d; }
+  .shelf3d .crest { position:absolute; left:0; right:0; top:0; height:var(--crest); border-radius:34px 34px 0 0; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(180deg,#e3b475,#c28b49 60%,#a06d2f); box-shadow:inset 0 2px 0 rgba(255,236,200,.55), inset 0 -6px 8px rgba(70,35,5,.35); transform:translateZ(3px); }
+  .shelf3d .plate { background:#32145f; color:var(--gold); border:1px solid var(--gold); border-radius:3px; padding:.22rem 1.2rem; font-family:'Marcellus',serif; letter-spacing:.12em; font-size:.82rem; box-shadow:0 1px 3px rgba(0,0,0,.45); }
+  .shelf3d .post { position:absolute; top:calc(var(--crest) - 20px); bottom:0; width:var(--post); transform:translateZ(3px); background:linear-gradient(90deg,#9c6a2e,#d4a264 45%,#a97738); box-shadow:inset 0 0 6px rgba(60,30,5,.35); }
+  .shelf3d .post.l { left:0; } .shelf3d .post.r { right:0; }
+  .shelf3d .plinth { position:absolute; left:0; right:0; bottom:0; height:var(--plinth); transform:translateZ(3px); background:linear-gradient(180deg,#c48f50,#8a5a26); box-shadow:inset 0 3px 0 rgba(255,236,200,.4); }
+  .shelf3d .w { position:absolute; pointer-events:none; }
+  .shelf3d .w-back { inset:0; transform:translateZ(calc(var(--d) * -1)); background:repeating-linear-gradient(90deg, rgba(110,62,18,.07) 0 1px, transparent 1px 11px), linear-gradient(180deg,#d1a066,#c08c50); }
+  .shelf3d .w-l { left:0; top:0; bottom:0; width:var(--d); transform-origin:left center; transform:rotateY(90deg); background:linear-gradient(90deg,#8c5c26,#b98440); }
+  .shelf3d .w-r { right:0; top:0; bottom:0; width:var(--d); transform-origin:right center; transform:rotateY(-90deg); background:linear-gradient(270deg,#8c5c26,#b98440); }
+  .shelf3d .w-t { left:0; right:0; top:0; height:var(--d); transform-origin:top center; transform:rotateX(-90deg); background:linear-gradient(0deg,#9a6a30,#6f4519); }
+  .shelf3d .tier, .shelf3d .srow, .shelf3d .bottles, .shelf3d .tier-note { position:relative; transform-style:preserve-3d; }
+  .shelf3d, .shelf3d * { pointer-events:none; }
+  .shelf3d .bt, .shelf3d .bt * { pointer-events:auto; }
+  .shelf3d .tier::before, .shelf3d .srow ~ .srow::after { content:""; position:absolute; left:0; right:0; top:0; height:84px; pointer-events:none;
+    background:linear-gradient(rgba(55,28,6,.42), rgba(55,28,6,0)); transform:translateZ(calc(var(--d) * -1 + 1px)); }
+  .shelf3d .tier-note { height:40px; padding:12px 14px 0; }
+  .shelf3d .tier-note span { display:inline-block; background:#f6dd5c; color:#4a3a05; font-family:'Homemade Apple',cursive; font-size:.76rem; padding:.3rem .75rem .38rem; box-shadow:0 3px 6px rgba(0,0,0,.3);
+    transform-origin:left top; transform:translateZ(calc(var(--d) * -1 + 3px)) rotate(-1.6deg); }
+  .shelf3d .bottles { display:flex; align-items:flex-end; gap:5px; padding:6px 14px 0; min-height:92px; transform:translateZ(calc(var(--d) * -.38)); }
+  .shelf3d .plank { position:relative; height:14px; transform-style:preserve-3d; background:linear-gradient(180deg,#e4b578,#c58a4a 50%,#97622c); box-shadow:inset 0 1px 0 rgba(255,240,210,.6), 0 3px 4px rgba(60,30,5,.35); }
+  .shelf3d .plank::before { content:""; position:absolute; left:0; right:0; bottom:100%; height:var(--d); transform-origin:center bottom; transform:rotateX(90deg);
+    background:repeating-linear-gradient(90deg, rgba(120,70,20,.10) 0 1px, transparent 1px 14px), linear-gradient(to top,#dbae72,#a87a40); }
+  .bt { --bh:62px; appearance:none; border:0; background:none; padding:0; margin:0; font:inherit; cursor:pointer; position:relative; width:var(--w); display:flex; flex-direction:column; align-items:center;
+    transition:transform .22s cubic-bezier(.2,.8,.2,1), filter .22s; }
+  .bt.sz-s { --bh:52px; } .bt.sz-l { --bh:74px; }
+  .bt::after { content:""; position:absolute; left:-6%; right:-6%; bottom:-3px; height:8px; border-radius:50%; background:radial-gradient(ellipse at center, rgba(45,22,4,.6), rgba(45,22,4,0) 70%); z-index:-1; pointer-events:none; }
+  .bt:hover, .bt:focus-visible { transform:translateY(-6px) translateZ(16px); outline:none; }
+  .bt:focus-visible .body { box-shadow:0 0 0 2px var(--gold); }
+  .bt.sel { transform:translateY(-12px) translateZ(34px) scale(1.12); filter:drop-shadow(0 0 7px rgba(212,175,55,.95)); z-index:2; }
+  .bt .cap { display:block; width:68%; height:19px; border-radius:3px 3px 1px 1px; background:repeating-linear-gradient(90deg,#15151a 0 2px,#2a2a31 2px 3px); box-shadow:inset 0 2px 0 rgba(255,255,255,.12); }
+  .bt.cap-t .cap { height:24px; width:62%; }
+  .bt.cap-w .cap { background:repeating-linear-gradient(90deg,#f3f0ea 0 2px,#dcd8cf 2px 3px); box-shadow:inset 0 2px 0 rgba(255,255,255,.7), inset 0 -2px 0 rgba(0,0,0,.1); }
+  .bt .neck { display:block; width:46%; height:5px; background:#24140a; }
+  .bt .body { display:block; position:relative; width:100%; height:var(--bh); border-radius:6px 6px 3px 3px;
+    background:linear-gradient(90deg,rgba(0,0,0,.5),rgba(255,255,255,.2) 16%,rgba(255,255,255,0) 32%,rgba(0,0,0,.18) 72%,rgba(0,0,0,.55)), linear-gradient(180deg,#5b3517,#2a1507); }
+  .bt.gl-dark .body { background:linear-gradient(90deg,rgba(0,0,0,.5),rgba(255,255,255,.16) 16%,rgba(255,255,255,0) 32%,rgba(0,0,0,.18) 72%,rgba(0,0,0,.55)), linear-gradient(180deg,#2b1e17,#120c08); }
+  .bt.gl-clear .body { background:linear-gradient(90deg,rgba(0,0,0,.28),rgba(255,255,255,.4) 16%,rgba(255,255,255,0) 32%,rgba(0,0,0,.1) 72%,rgba(0,0,0,.32)), linear-gradient(180deg,#d4dde1,#aab7bc); }
+  .bt .lab { position:absolute; left:9%; right:9%; top:16%; bottom:9%; background:#f5f1e9; border-radius:2px; border-top:4px solid var(--c); display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; padding:1px; box-shadow:0 0 0 .5px rgba(0,0,0,.25); }
+  .bt .lab b { font-size:6.4px; line-height:1.15; font-weight:600; color:#2a1830; text-align:center; display:-webkit-box; -webkit-line-clamp:5; -webkit-box-orient:vertical; overflow:hidden; word-break:break-word; hyphens:auto; max-width:100%; }
+  .bt .lab em { font-style:normal; font-size:7px; font-weight:700; color:#8a6a10; margin-top:1px; }
+  .shelf-info { position:sticky; bottom:10px; z-index:15; margin-top:16px; padding:.8rem 1rem; border:1px solid var(--gold); border-radius:6px; background:var(--panel); box-shadow:0 6px 22px var(--shadow);
+    display:flex; gap:.7rem 1.2rem; align-items:center; justify-content:space-between; flex-wrap:wrap; font-size:.86rem; color:var(--ink-soft); }
+  .shelf-info.idle { position:static; border-style:dashed; border-color:var(--line); box-shadow:none; justify-content:center; text-align:center; }
+  .shelf-info .si-name { font-family:'Marcellus',Georgia,serif; font-size:1.12rem; color:var(--ink); }
+  .shelf-info .si-meta { margin-top:.2rem; line-height:1.45; }
+  @media (max-width:640px) {
+    .shelf3d { --w:34px; --post:16px; --crest:50px; --d:46px; --plinth:24px; padding:16px 6px 28px; }
+    .shelf3d .bottles { gap:4px; padding:6px 8px 0; min-height:80px; }
+    .bt.sz-s { --bh:42px; } .bt { --bh:50px; } .bt.sz-l { --bh:60px; }
+    .bt .cap { height:15px; } .bt.cap-t .cap { height:19px; }
+    .bt .lab b { font-size:5.2px; } .bt .lab em { font-size:6px; }
+    .shelf3d .tier-note span { font-size:.68rem; } .shelf3d .plate { font-size:.7rem; padding:.2rem .8rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { .shelf3d .cab, .bt { transition:none; } }
 </style>
 </head>
 <body>
@@ -803,6 +872,10 @@ const I18N = {
     lib_save_btn: "Enregistrer la bibliothèque",
     lib_unsaved: "Modifications non enregistrées",
     lib_saved: "Bibliothèque à jour",
+    shelf_top: "Notes de tête", shelf_heart: "Notes de cœur", shelf_base: "Notes de fond",
+    view_shelf: "Étagère", view_list: "Liste",
+    shelf_hint: "Touchez un flacon pour voir ses détails, le modifier ou le retirer.",
+    shelf_open: "Ouvrir la fiche",
     lib_saved_at: "Enregistré à {h}",
     lib_subtitle: "La base de départ pour composer vos formules. Ajoutez, modifiez ou retirez des matières au fil de votre travail — tout reste enregistré dans ce navigateur. Cliquez sur le nom d'une matière pour ouvrir sa fiche.",
     data_title: "Sauvegarde & export",
@@ -1197,6 +1270,10 @@ const I18N = {
     lib_save_btn: "Save library",
     lib_unsaved: "Unsaved changes",
     lib_saved: "Library up to date",
+    shelf_top: "Top notes", shelf_heart: "Heart notes", shelf_base: "Base notes",
+    view_shelf: "Shelf", view_list: "List",
+    shelf_hint: "Tap a bottle to see its details, edit it or remove it.",
+    shelf_open: "Open sheet",
     lib_saved_at: "Saved at {h}",
     lib_subtitle: "The starting base for composing your formulas. Add, edit or remove materials as you work — everything stays saved in this browser. Click a material's name to open its sheet.",
     data_title: "Backup & export",
@@ -2856,14 +2933,138 @@ let editingMaterialId = null;
 let libraryFilter = "";
 let libraryFilterFocused = false;
 
+
+/* ====== Étagère 3D : têtes en haut, cœurs au milieu, fonds en bas ====== */
+let libraryView = "shelf";
+try { if (localStorage.getItem("orgue_lib_view") === "list") libraryView = "list"; } catch (e) {}
+let shelfSelId = null;
+let shelfCap = (typeof window !== "undefined" && window.innerWidth < 700) ? 7 : 19;
+function shelfHash(str) { let h = 0; str = String(str || ""); for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0; return h; }
+function shelfShortName(name) {
+  const n = String(name || "").replace(/\s*\([^)]*\)/g, "").replace(/\s*\d+(?:[.,]\d+)?\s*%/g, "").replace(/\s+/g, " ").trim();
+  return n || String(name || "");
+}
+function bottleHTML(m) {
+  const h = shelfHash(m.id || m.name);
+  const purity = m.purity ?? 100;
+  const diluted = purity < 100;
+  const capCls = diluted ? "cap-w" : (h % 4 === 0 ? "cap-t" : "cap-b");
+  const size = ["s", "m", "l"][h % 3];
+  const glass = m.family === "Support" ? "clear" : (h % 5 === 0 ? "dark" : "amber");
+  const col = FAM_COLORS[m.family] || "#999";
+  const sel = shelfSelId === m.id;
+  return `<button type="button" class="bt ${capCls} sz-${size} gl-${glass}${sel ? " sel" : ""}" style="--c:${col}" data-bt="${escapeHtml(m.id)}" title="${escapeHtml(m.name)}" aria-label="${escapeHtml(m.name)}" aria-pressed="${sel}"><i class="cap"></i><i class="neck"></i><i class="body"><i class="lab"><b>${escapeHtml(shelfShortName(m.name))}</b>${diluted ? `<em>${purity}%</em>` : ""}</i></i></button>`;
+}
+function shelfInfoHTML(list) {
+  const m = shelfSelId ? list.find(x => x.id === shelfSelId) : null;
+  if (!m) return `<div class="shelf-info idle">${t("shelf_hint")}</div>`;
+  const desc = Array.isArray(m.descriptors) ? m.descriptors.join(", ") : (m.descriptors || "");
+  return `<div class="shelf-info">
+    <div><div class="si-name">${escapeHtml(m.name)}</div>
+      <div class="si-meta">${escapeHtml(familyLabel(m.family))} · ${posLabel(m.position)} · ${t("col_purity")} ${(m.purity ?? 100)}% · ${t("col_ifra")} ${m.ifraMax}%${desc ? `<br>${escapeHtml(desc)}` : ""}</div></div>
+    <div class="actions-row">
+      <button class="btn secondary small" type="button" data-mat="${escapeHtml(m.id)}">${t("shelf_open")}</button>
+      <button class="btn secondary small" type="button" data-edit="${m.id}">${t("btn_edit")}</button>
+      <button class="btn secondary small" type="button" data-del="${m.id}">${t("btn_remove")}</button>
+    </div></div>`;
+}
+function shelfHTML(list) {
+  const famIdx = f => { const i = FAMILIES.indexOf(f); return i < 0 ? 99 : i; };
+  const by = { top: [], heart: [], base: [] };
+  list.forEach(m => (by[m.position] || by.heart).push(m));
+  const cap = Math.max(3, shelfCap);
+  const tiers = ["top", "heart", "base"].map(k => {
+    const items = by[k].slice().sort((a, b) => famIdx(a.family) - famIdx(b.family) || String(a.name).localeCompare(String(b.name), "fr", { sensitivity: "base" }));
+    let rows = "";
+    if (!items.length) rows = `<div class="srow"><div class="bottles"></div><div class="plank"></div></div>`;
+    for (let i = 0; i < items.length; i += cap) rows += `<div class="srow"><div class="bottles">${items.slice(i, i + cap).map(bottleHTML).join("")}</div><div class="plank"></div></div>`;
+    return `<div class="tier tier-${k}"><div class="tier-note"><span>${t("shelf_" + k)} · ${items.length}</span></div>${rows}</div>`;
+  }).join("");
+  return `<div class="shelf3d" id="shelf3d"><div class="cab">
+    <div class="crest"><span class="plate">Maison Aïnâri</span></div><div class="post l"></div><div class="post r"></div><div class="plinth"></div>
+    <div class="cab-in"><div class="w w-back"></div><div class="w w-l"></div><div class="w w-r"></div><div class="w w-t"></div>${tiers}</div>
+  </div></div>`;
+}
+function listHTML(list) {
+  const rows = list.slice().sort(byPositionThenPercent);
+  return `<table>
+        <thead><tr><th>${t("col_name")}</th><th>${t("col_family")}</th><th>${t("col_position")}</th><th>${t("col_descriptors")}</th><th>${t("col_purity")}</th><th>${t("col_ifra")}</th><th></th></tr></thead>
+        <tbody>
+          ${rows.map(m => `
+            <tr class="row-${m.position}">
+              <td>${matLink(m.name)}</td>
+              <td>${escapeHtml(familyLabel(m.family))}</td>
+              <td><span class="tag ${m.position}">${posLabel(m.position)}</span></td>
+              <td style="color:var(--ink-soft); max-width:220px;">${escapeHtml(m.descriptors||"")}</td>
+              <td>${(m.purity ?? 100)}%</td>
+              <td>${m.ifraMax}%</td>
+              <td><div class="actions-row">
+                <button class="btn secondary small" data-edit="${m.id}">${t("btn_edit")}</button>
+                <button class="btn secondary small" data-del="${m.id}">${t("btn_remove")}</button>
+              </div></td>
+            </tr>`).join("")}
+        </tbody>
+      </table>`;
+}
+function libVisible() { return materials.filter(m => normalize(m.name).includes(normalize(libraryFilter))); }
+function shelfBodyHTML(list) {
+  if (!list.length) return `<div class="empty">${t("no_materials_match")}</div>`;
+  return libraryView === "shelf" ? shelfHTML(list) + shelfInfoHTML(list) : listHTML(list);
+}
+function refreshShelf() {
+  const slot = document.getElementById("shelf-slot"); if (!slot) return;
+  slot.innerHTML = shelfBodyHTML(libVisible());
+}
+function shelfFit() {
+  const sh = document.getElementById("shelf3d"); if (!sh) return;
+  const b = sh.querySelector(".bottles"); if (!b || !b.clientWidth) return;
+  const cs = getComputedStyle(b);
+  const inner = b.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  const gap = parseFloat(cs.columnGap) || 5;
+  const bw = (sh.querySelector(".bt") || {}).offsetWidth || 42;
+  const cap = Math.max(3, Math.floor((inner + gap) / (bw + gap)));
+  if (cap !== shelfCap) { shelfCap = cap; refreshShelf(); }
+}
+function libClick(e) {
+  const bt = e.target.closest("[data-bt]");
+  if (bt) { shelfSelId = shelfSelId === bt.dataset.bt ? null : bt.dataset.bt; refreshShelf(); return; }
+  const v = e.target.closest("[data-view]");
+  if (v) { libraryView = v.dataset.view; try { localStorage.setItem("orgue_lib_view", libraryView); } catch (err) {} renderLibrary(); return; }
+  const d = e.target.closest("[data-del]");
+  if (d) {
+    materials = materials.filter(m => m.id !== d.dataset.del);
+    if (editingMaterialId === d.dataset.del) editingMaterialId = null;
+    if (shelfSelId === d.dataset.del) shelfSelId = null;
+    materialsDirty = true; renderLibrary(); return;
+  }
+  const ed = e.target.closest("[data-edit]");
+  if (ed) {
+    editingMaterialId = ed.dataset.edit; renderLibrary();
+    document.getElementById("add-material-panel").scrollIntoView({behavior:"smooth", block:"start"});
+  }
+}
+let shelfFitTimer = null, shelfObserver = null;
+
 function renderLibrary() {
   const el = document.getElementById("tab-library");
   const editing = editingMaterialId ? materials.find(m => m.id === editingMaterialId) : null;
-  const visible = materials.filter(m => normalize(m.name).includes(normalize(libraryFilter))).sort(byPositionThenPercent);
+  const visible = libVisible();
+  const registeredPanel = `
+    <div class="panel" id="registered-panel">
+      <div class="toolbar">
+        <h3 style="margin:0;">${t("registered_materials",{n:materials.length})}</h3>
+        <div class="lib-tools">
+          <div class="seg" role="group"><button type="button" class="${libraryView==="shelf"?"on":""}" data-view="shelf">${t("view_shelf")}</button><button type="button" class="${libraryView==="list"?"on":""}" data-view="list">${t("view_list")}</button></div>
+          <input type="text" id="lib-filter" placeholder="${t("filter_placeholder")}" value="${escapeHtml(libraryFilter)}" style="max-width:220px;">
+        </div>
+      </div>
+      <div id="shelf-slot">${shelfBodyHTML(visible)}</div>
+    </div>`;
   el.innerHTML = `
     <h2 class="section-title">${t("lib_title")}</h2>
     <p class="section-sub">${t("lib_subtitle")}</p>
     <div class="lib-savebar" id="lib-savebar"><span id="lib-save-status"></span><button class="btn" id="lib-save-btn" type="button">${t("lib_save_btn")}</button></div>
+    ${registeredPanel}
     <div class="panel">
       <h3>${t("data_title")}</h3>
       <p class="section-sub" style="margin-bottom:0.9rem;">${t("data_sub")}</p>
@@ -2918,31 +3119,6 @@ function renderLibrary() {
         </div>
       </form>
     </div>
-    <div class="panel">
-      <div class="toolbar">
-        <h3 style="margin:0;">${t("registered_materials",{n:materials.length})}</h3>
-        <input type="text" id="lib-filter" placeholder="${t("filter_placeholder")}" value="${escapeHtml(libraryFilter)}" style="max-width:220px;">
-      </div>
-      ${visible.length === 0 ? `<div class="empty">${t("no_materials_match")}</div>` : `
-      <table>
-        <thead><tr><th>${t("col_name")}</th><th>${t("col_family")}</th><th>${t("col_position")}</th><th>${t("col_descriptors")}</th><th>${t("col_purity")}</th><th>${t("col_ifra")}</th><th></th></tr></thead>
-        <tbody>
-          ${visible.map(m => `
-            <tr class="row-${m.position}">
-              <td>${matLink(m.name)}</td>
-              <td>${escapeHtml(familyLabel(m.family))}</td>
-              <td><span class="tag ${m.position}">${posLabel(m.position)}</span></td>
-              <td style="color:var(--ink-soft); max-width:220px;">${escapeHtml(m.descriptors||"")}</td>
-              <td>${(m.purity ?? 100)}%</td>
-              <td>${m.ifraMax}%</td>
-              <td><div class="actions-row">
-                <button class="btn secondary small" data-edit="${m.id}">${t("btn_edit")}</button>
-                <button class="btn secondary small" data-del="${m.id}">${t("btn_remove")}</button>
-              </div></td>
-            </tr>`).join("")}
-        </tbody>
-      </table>`}
-    </div>
   `;
   document.getElementById("lib-save-btn").addEventListener("click", commitMaterials);
   updateLibSaveBar();
@@ -2975,21 +3151,20 @@ function renderLibrary() {
   if (libraryFilterFocused) { filterInput.focus(); filterInput.setSelectionRange(filterInput.value.length, filterInput.value.length); }
   filterInput.addEventListener("focus", () => { libraryFilterFocused = true; });
   filterInput.addEventListener("blur", () => { libraryFilterFocused = false; });
-  el.querySelectorAll("[data-del]").forEach(b => {
-    b.addEventListener("click", () => {
-      materials = materials.filter(m => m.id !== b.dataset.del);
-      if (editingMaterialId === b.dataset.del) editingMaterialId = null;
-      materialsDirty = true;
-      renderLibrary();
-    });
-  });
-  el.querySelectorAll("[data-edit]").forEach(b => {
-    b.addEventListener("click", () => {
-      editingMaterialId = b.dataset.edit;
-      renderLibrary();
-      document.getElementById("add-material-panel").scrollIntoView({behavior:"smooth", block:"start"});
-    });
-  });
+  el.onclick = libClick;
+  el.onpointermove = e => {
+    const sh = document.getElementById("shelf3d");
+    if (!sh || e.pointerType === "touch" || !window.matchMedia("(prefers-reduced-motion: no-preference)").matches) return;
+    const r = sh.getBoundingClientRect();
+    sh.style.setProperty("--ry", (((e.clientX - r.left) / r.width - .5) * 6).toFixed(2) + "deg");
+    sh.style.setProperty("--rx", ((-((e.clientY - r.top) / r.height - .5)) * 1.6).toFixed(2) + "deg");
+  };
+  el.onpointerleave = () => { const sh = document.getElementById("shelf3d"); if (sh) { sh.style.setProperty("--ry", "0deg"); sh.style.setProperty("--rx", "0deg"); } };
+  if (!shelfObserver && window.ResizeObserver) {
+    shelfObserver = new ResizeObserver(() => { clearTimeout(shelfFitTimer); shelfFitTimer = setTimeout(shelfFit, 120); });
+    shelfObserver.observe(el);
+  }
+  requestAnimationFrame(shelfFit);
   document.getElementById("export-data-btn").addEventListener("click", () => {
     const payload = { app: "orgue", exportedAt: new Date().toISOString(), materials, formulas, drafts, analyses, submissions };
     const text = JSON.stringify(payload, null, 2);
