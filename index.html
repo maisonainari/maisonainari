@@ -714,6 +714,11 @@
   .bt .lab.ltp b { display:block; width:100%; overflow:visible; overflow-wrap:anywhere; font-family:'Homemade Apple','Segoe Script',cursive; font-weight:400; font-size:5.6px; color:#1c2a63; line-height:1.35; }
   .bt .lab em { font-style:normal; font-family:'Homemade Apple',cursive; font-size:6px; color:#1c2a63; }
   .bt.k-jar .lab { background:#fff; box-shadow:0 0 0 .6px rgba(0,0,0,.5); top:calc(18% + var(--ly)); }
+  .shelf3d .dv { --rot:0deg; --ml:6px; --c:#999; flex:0 0 auto; display:flex; align-items:center; justify-content:center; position:relative; margin:0 4px 0 var(--ml);
+    width:calc(58px * var(--u)); height:calc(54px * var(--u)); padding:7px 2px 2px; background:linear-gradient(180deg,#f3ead0,#e6d9b2); border-top:6px solid var(--c); border-radius:1px 1px 0 0;
+    transform-origin:50% 100%; transform:rotate(var(--rot)); box-shadow:2px 1px 3px rgba(35,15,2,.45), inset 0 -3px 4px rgba(120,95,40,.2); }
+  .shelf3d .dv::after { content:""; position:absolute; left:0; right:0; bottom:-3px; height:6px; border-radius:50%; background:radial-gradient(ellipse at 50% 50%, rgba(25,10,0,.6), rgba(25,10,0,0) 72%); }
+  .shelf3d .dv b { font-family:'Homemade Apple','Segoe Script',cursive; font-weight:400; font-style:normal; font-size:7.4px; line-height:1.25; text-align:center; color:#1c1030; overflow-wrap:anywhere; }
   .shelf-hint { margin:.9rem 0 0; text-align:center; font-size:.82rem; color:var(--ink-soft); }
   .shelf-info { position:sticky; bottom:10px; z-index:15; margin-top:16px; padding:.8rem 1rem; border:1px solid var(--gold); border-radius:6px; background:var(--panel); box-shadow:0 6px 22px var(--shadow);
     display:flex; gap:.7rem 1.2rem; align-items:center; justify-content:space-between; flex-wrap:wrap; font-size:.86rem; color:var(--ink-soft); }
@@ -3027,14 +3032,24 @@ function bottleHTML(m, sp, first, client) {
   return `<button type="button" class="bt k-${sp.kind} cap-${sp.cap} gl-${sp.glass}${sel ? " sel" : ""}" style="${style}" ${attr} title="${escapeHtml(m.name)}" aria-label="${escapeHtml(m.name)}"><i class="cap"></i><i class="neck"></i><i class="body">${lab}</i></button>`;
 }
 function shelfRows(items) {
-  const rows = [], u = shelfScale(); let cur = [], used = 0;
+  const rows = [], u = shelfScale(); let cur = [], used = 0, prev = null;
   items.forEach(m => {
     const sp = bottleSpec(m), w = sp.w * u + sp.ml;
+    if (m.family !== prev) {
+      prev = m.family;
+      const dw = 58 * u + 10;   // fiche cartonnée de séparation, posée devant le groupe
+      if (cur.length && used + dw + w > shelfInner) { rows.push(cur); cur = []; used = 0; }
+      cur.push({ dv: m.family }); used += dw;
+    }
     if (cur.length && used + w > shelfInner) { rows.push(cur); cur = []; used = 0; }
     cur.push([m, sp]); used += w;
   });
   if (cur.length) rows.push(cur);
   return rows;
+}
+function dividerHTML(f, first) {
+  const h = shelfHash(f), rot = (((h >>> 3) % 5) - 2) * 0.6;
+  return `<i class="dv" style="--c:${FAM_COLORS[f] || "#999"};--rot:${rot}deg;--ml:${first ? 0 : 6}px" aria-hidden="true"><b>${escapeHtml(familyLabel(f))}</b></i>`;
 }
 function shelfHTML(list, opts) {
   opts = opts || {};
@@ -3044,7 +3059,7 @@ function shelfHTML(list, opts) {
   const tiers = ["top", "heart", "base"].map(k => {
     const items = by[k].slice().sort((a, b) => famIdx(a.family) - famIdx(b.family) || String(a.name).localeCompare(String(b.name), "fr", { sensitivity: "base" }));
     let rows = items.length ? "" : `<div class="srow"><div class="bottles"></div><div class="plank"></div></div>`;
-    shelfRows(items).forEach(row => { rows += `<div class="srow"><div class="bottles">${row.map(([m, sp], i) => bottleHTML(m, sp, i === 0, opts.client)).join("")}</div><div class="plank"></div></div>`; });
+    shelfRows(items).forEach(row => { rows += `<div class="srow"><div class="bottles">${row.map((e, i) => e.dv ? dividerHTML(e.dv, i === 0) : bottleHTML(e[0], e[1], i === 0, opts.client)).join("")}</div><div class="plank"></div></div>`; });
     return `<div class="tier tier-${k}"><div class="tier-note"><span>${t("shelf_" + k)} · ${items.length}</span></div>${rows}</div>`;
   }).join("");
   return `<div class="shelf3d" id="${opts.id || "shelf3d"}" style="--u:${shelfScale()}"><div class="cab">
