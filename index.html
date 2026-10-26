@@ -618,72 +618,112 @@
   .lib-savebar.dirty { border-color: #b8902a; background: #fff6dc; color: #5a3d00; box-shadow: 0 2px 10px rgba(184,144,42,0.35); }
   .lib-savebar.dirty #lib-save-status { font-weight: 600; }
 
-  /* ===== Étagère 3D des matières premières ===== */
+  /* ===== Étagère 3D des matières premières (v2, bois et verre réalistes) ===== */
   .lib-tools { display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; }
   .seg { display:inline-flex; border:1px solid var(--line); border-radius:6px; overflow:hidden; }
   .seg button { appearance:none; border:0; background:transparent; color:var(--ink-soft); font:inherit; font-size:.82rem; padding:.42rem .85rem; cursor:pointer; }
   .seg button.on { background:var(--base-tone); color:var(--gold); }
   .seg button:focus-visible { outline:2px solid var(--gold); outline-offset:-2px; }
-  .shelf3d { --d:64px; --post:26px; --crest:60px; --plinth:30px; --w:42px; --rx:0deg; --ry:0deg;
-    perspective:1700px; perspective-origin:50% 35%; padding:26px 14px 42px; border-radius:8px;
-    background:radial-gradient(ellipse at 50% 0%, #4d2784 0%, #25104a 55%, #170a2e 100%); border:1px solid #6a4aa0; }
+  .shelf3d { --d:64px; --post:28px; --crest:62px; --plinth:30px; --u:1; --rx:0deg; --ry:0deg;
+    --tx-plank:url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%27420%27%20height=%2796%27%3E%3Cfilter%20id=%27n%27%20x=%270%27%20y=%270%27%20width=%27100%%27%20height=%27100%%27%3E%3CfeTurbulence%20type=%27fractalNoise%27%20baseFrequency=%270.004%200.30%27%20numOctaves=%273%27%20seed=%277%27%20stitchTiles=%27stitch%27/%3E%3CfeColorMatrix%20values=%270%200%200%200%200.2%200%200%200%200%200.09%200%200%200%200%200.02%202.4%200%200%200%20-0.62%27/%3E%3C/filter%3E%3Crect%20width=%27100%%27%20height=%27100%%27%20filter=%27url%28%23n%29%27/%3E%3C/svg%3E"); --tx-vert:url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2796%27%20height=%27420%27%3E%3Cfilter%20id=%27n%27%20x=%270%27%20y=%270%27%20width=%27100%%27%20height=%27100%%27%3E%3CfeTurbulence%20type=%27fractalNoise%27%20baseFrequency=%270.30%200.004%27%20numOctaves=%273%27%20seed=%2711%27%20stitchTiles=%27stitch%27/%3E%3CfeColorMatrix%20values=%270%200%200%200%200.22%200%200%200%200%200.1%200%200%200%200%200.02%202.2%200%200%200%20-0.58%27/%3E%3C/filter%3E%3Crect%20width=%27100%%27%20height=%27100%%27%20filter=%27url%28%23n%29%27/%3E%3C/svg%3E"); --tx-plaster:url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%27220%27%20height=%27220%27%3E%3Cfilter%20id=%27n%27%20x=%270%27%20y=%270%27%20width=%27100%%27%20height=%27100%%27%3E%3CfeTurbulence%20type=%27fractalNoise%27%20baseFrequency=%270.85%27%20numOctaves=%272%27%20seed=%273%27%20stitchTiles=%27stitch%27/%3E%3CfeColorMatrix%20values=%270%200%200%200%201%200%200%200%200%200.95%200%200%200%200%201%200.9%200%200%200%20-0.38%27/%3E%3C/filter%3E%3Crect%20width=%27100%%27%20height=%27100%%27%20filter=%27url%28%23n%29%27/%3E%3C/svg%3E"); --tx-scuff:url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%27300%27%20height=%27300%27%3E%3Cfilter%20id=%27n%27%20x=%270%27%20y=%270%27%20width=%27100%%27%20height=%27100%%27%3E%3CfeTurbulence%20type=%27fractalNoise%27%20baseFrequency=%270.02%200.9%27%20numOctaves=%272%27%20seed=%275%27%20stitchTiles=%27stitch%27/%3E%3CfeColorMatrix%20values=%270%200%200%200%201%200%200%200%200%200.88%200%200%200%200%200.7%202.6%200%200%200%20-1.55%27/%3E%3C/filter%3E%3Crect%20width=%27100%%27%20height=%27100%%27%20filter=%27url%28%23n%29%27/%3E%3C/svg%3E");
+    perspective:1700px; perspective-origin:50% 35%; padding:28px 14px 44px; border-radius:8px;
+    background:var(--tx-plaster), radial-gradient(ellipse at 50% -10%, #3d1f6b 0%, #1f0e3d 52%, #120a24 100%); border:1px solid #5a3f8a; }
   .shelf3d .cab { position:relative; max-width:1020px; margin:0 auto; padding:var(--crest) var(--post) var(--plinth);
     transform-style:preserve-3d; transform:rotateX(var(--rx)) rotateY(var(--ry)); transition:transform .25s ease-out;
-    border-radius:34px 34px 4px 4px; box-shadow:0 44px 50px -30px rgba(0,0,0,.75); }
+    border-radius:34px 34px 4px 4px; box-shadow:0 46px 46px -30px rgba(0,0,0,.8); }
   .shelf3d .cab-in { position:relative; transform-style:preserve-3d; }
-  .shelf3d .crest { position:absolute; left:0; right:0; top:0; height:var(--crest); border-radius:34px 34px 0 0; display:flex; align-items:center; justify-content:center;
-    background:linear-gradient(180deg,#e3b475,#c28b49 60%,#a06d2f); box-shadow:inset 0 2px 0 rgba(255,236,200,.55), inset 0 -6px 8px rgba(70,35,5,.35); transform:translateZ(3px); }
-  .shelf3d .plate { background:#32145f; color:var(--gold); border:1px solid var(--gold); border-radius:3px; padding:.22rem 1.2rem; font-family:'Marcellus',serif; letter-spacing:.12em; font-size:.82rem; box-shadow:0 1px 3px rgba(0,0,0,.45); }
-  .shelf3d .post { position:absolute; top:calc(var(--crest) - 20px); bottom:0; width:var(--post); transform:translateZ(3px); background:linear-gradient(90deg,#9c6a2e,#d4a264 45%,#a97738); box-shadow:inset 0 0 6px rgba(60,30,5,.35); }
+  .shelf3d .crest { position:absolute; left:0; right:0; top:0; height:var(--crest); border-radius:34px 34px 0 0; display:flex; align-items:center; justify-content:center; transform:translateZ(3px);
+    background:var(--tx-plank), linear-gradient(180deg,#e2a85f 0%,#c9843c 55%,#a8672a 100%);
+    box-shadow:inset 0 2px 0 rgba(255,230,185,.6), inset 0 -7px 9px rgba(60,28,4,.4), inset 0 0 0 1px rgba(80,38,6,.35); }
+  .shelf3d .plate { background:linear-gradient(180deg,#3a1773,#2a0f58); color:var(--gold); border:1px solid #b8923a; border-radius:2px; padding:.2rem 1.2rem; font-family:'Marcellus',serif; letter-spacing:.12em; font-size:.8rem; box-shadow:0 1px 2px rgba(0,0,0,.5), inset 0 0 0 1px rgba(0,0,0,.25); }
+  .shelf3d .post { position:absolute; top:calc(var(--crest) - 22px); bottom:0; width:var(--post); transform:translateZ(3px); border-radius:3px 3px 0 0;
+    background:radial-gradient(circle at 50% 14px, rgba(60,28,4,.55) 0 3px, transparent 3.6px), radial-gradient(circle at 50% calc(100% - 44px), rgba(60,28,4,.55) 0 3px, transparent 3.6px),
+      var(--tx-vert), linear-gradient(90deg,#8f5c26,#d9a15d 38%,#c58a47 60%,#8d5a25);
+    box-shadow:inset 0 0 7px rgba(50,22,2,.45), inset 1px 0 0 rgba(255,225,175,.35); }
   .shelf3d .post.l { left:0; } .shelf3d .post.r { right:0; }
-  .shelf3d .plinth { position:absolute; left:0; right:0; bottom:0; height:var(--plinth); transform:translateZ(3px); background:linear-gradient(180deg,#c48f50,#8a5a26); box-shadow:inset 0 3px 0 rgba(255,236,200,.4); }
-  .shelf3d .w { position:absolute; pointer-events:none; }
-  .shelf3d .w-back { inset:0; transform:translateZ(calc(var(--d) * -1)); background:repeating-linear-gradient(90deg, rgba(110,62,18,.07) 0 1px, transparent 1px 11px), linear-gradient(180deg,#d1a066,#c08c50); }
-  .shelf3d .w-l { left:0; top:0; bottom:0; width:var(--d); transform-origin:left center; transform:rotateY(90deg); background:linear-gradient(90deg,#8c5c26,#b98440); }
-  .shelf3d .w-r { right:0; top:0; bottom:0; width:var(--d); transform-origin:right center; transform:rotateY(-90deg); background:linear-gradient(270deg,#8c5c26,#b98440); }
-  .shelf3d .w-t { left:0; right:0; top:0; height:var(--d); transform-origin:top center; transform:rotateX(-90deg); background:linear-gradient(0deg,#9a6a30,#6f4519); }
-  .shelf3d .tier, .shelf3d .srow, .shelf3d .bottles, .shelf3d .tier-note { position:relative; transform-style:preserve-3d; }
+  .shelf3d .plinth { position:absolute; left:0; right:0; bottom:0; height:var(--plinth); transform:translateZ(3px);
+    background:var(--tx-plank), linear-gradient(180deg,#c78c4c,#8c5a26); box-shadow:inset 0 3px 0 rgba(255,230,185,.45), inset 0 -4px 6px rgba(40,18,2,.45); }
+  .shelf3d .w { position:absolute; }
+  .shelf3d .w-back { inset:0; transform:translateZ(calc(var(--d) * -1));
+    background:linear-gradient(90deg, rgba(40,18,2,.38), rgba(40,18,2,0) 7%, rgba(40,18,2,0) 93%, rgba(40,18,2,.38)),
+      repeating-linear-gradient(90deg, rgba(50,22,4,0) 0 71px, rgba(50,22,4,.17) 71px 72px, rgba(255,225,170,.10) 72px 73px),
+      var(--tx-vert), linear-gradient(180deg,#c9884d,#b9783b); box-shadow:inset 0 0 55px rgba(35,15,2,.5); }
+  .shelf3d .w-l { left:0; top:0; bottom:0; width:var(--d); transform-origin:left center; transform:rotateY(90deg); background:var(--tx-vert), linear-gradient(90deg,#7c4d1f,#a9702f); }
+  .shelf3d .w-r { right:0; top:0; bottom:0; width:var(--d); transform-origin:right center; transform:rotateY(-90deg); background:var(--tx-vert), linear-gradient(270deg,#7c4d1f,#a9702f); }
+  .shelf3d .w-t { left:0; right:0; top:0; height:var(--d); transform-origin:top center; transform:rotateX(-90deg); background:var(--tx-plank), linear-gradient(0deg,#8a5a28,#5e3a14); }
   .shelf3d, .shelf3d * { pointer-events:none; }
   .shelf3d .bt, .shelf3d .bt * { pointer-events:auto; }
-  .shelf3d .tier::before, .shelf3d .srow ~ .srow::after { content:""; position:absolute; left:0; right:0; top:0; height:84px; pointer-events:none;
-    background:linear-gradient(rgba(55,28,6,.42), rgba(55,28,6,0)); transform:translateZ(calc(var(--d) * -1 + 1px)); }
-  .shelf3d .tier-note { height:40px; padding:12px 14px 0; }
-  .shelf3d .tier-note span { display:inline-block; background:#f6dd5c; color:#4a3a05; font-family:'Homemade Apple',cursive; font-size:.76rem; padding:.3rem .75rem .38rem; box-shadow:0 3px 6px rgba(0,0,0,.3);
+  .shelf3d .tier, .shelf3d .srow, .shelf3d .bottles, .shelf3d .tier-note { position:relative; transform-style:preserve-3d; }
+  .shelf3d .tier::before, .shelf3d .srow ~ .srow::after { content:""; position:absolute; left:0; right:0; top:0; height:110px;
+    background:linear-gradient(rgba(35,15,2,.55), rgba(35,15,2,.2) 35%, rgba(35,15,2,0)); transform:translateZ(calc(var(--d) * -1 + 1px)); }
+  .shelf3d .tier-note { height:40px; padding:12px 16px 0; }
+  .shelf3d .tier-note span { display:inline-block; background:linear-gradient(180deg,#f7de63,#efd24a); color:#3d2f05; font-family:'Homemade Apple',cursive; font-size:.74rem; padding:.3rem .8rem .4rem; box-shadow:0 4px 7px rgba(30,12,0,.4);
     transform-origin:left top; transform:translateZ(calc(var(--d) * -1 + 3px)) rotate(-1.6deg); }
-  .shelf3d .bottles { display:flex; align-items:flex-end; gap:5px; padding:6px 14px 0; min-height:92px; transform:translateZ(calc(var(--d) * -.38)); }
-  .shelf3d .plank { position:relative; height:14px; transform-style:preserve-3d; background:linear-gradient(180deg,#e4b578,#c58a4a 50%,#97622c); box-shadow:inset 0 1px 0 rgba(255,240,210,.6), 0 3px 4px rgba(60,30,5,.35); }
+  .shelf3d .bottles { display:flex; align-items:flex-end; padding:6px 16px 0; min-height:calc(100px * var(--u)); transform:translateZ(calc(var(--d) * -.38)); }
+  .shelf3d .plank { position:relative; height:15px; transform-style:preserve-3d; border-radius:0 0 2px 2px;
+    background:var(--tx-plank), linear-gradient(180deg,#e6ae68 0%,#c98640 30%,#a86a2c 75%,#8a5421 100%); box-shadow:inset 0 1px 0 rgba(255,238,200,.75), inset 0 -2px 0 rgba(60,28,4,.3), 0 4px 5px rgba(40,18,2,.4); }
   .shelf3d .plank::before { content:""; position:absolute; left:0; right:0; bottom:100%; height:var(--d); transform-origin:center bottom; transform:rotateX(90deg);
-    background:repeating-linear-gradient(90deg, rgba(120,70,20,.10) 0 1px, transparent 1px 14px), linear-gradient(to top,#dbae72,#a87a40); }
-  .bt { --bh:62px; appearance:none; border:0; background:none; padding:0; margin:0; font:inherit; cursor:pointer; position:relative; width:var(--w); display:flex; flex-direction:column; align-items:center;
-    transition:transform .22s cubic-bezier(.2,.8,.2,1), filter .22s; }
-  .bt.sz-s { --bh:52px; } .bt.sz-l { --bh:74px; }
-  .bt::after { content:""; position:absolute; left:-6%; right:-6%; bottom:-3px; height:8px; border-radius:50%; background:radial-gradient(ellipse at center, rgba(45,22,4,.6), rgba(45,22,4,0) 70%); z-index:-1; pointer-events:none; }
-  .bt:hover, .bt:focus-visible { transform:translateY(-6px) translateZ(16px); outline:none; }
+    background:linear-gradient(to top, rgba(40,18,2,0) 55%, rgba(40,18,2,.42)), var(--tx-scuff), var(--tx-plank), linear-gradient(to top,#dfaa68,#b27a3c); }
+  /* flacons */
+  .bt { --bw:40; --bh:58; --ch:19; --rot:0deg; --ml:4px; --ly:0px; --fill:14%; --c:#999;
+    appearance:none; border:0; background:none; padding:0; margin:0 0 0 var(--ml); font:inherit; cursor:pointer; position:relative; flex:0 0 auto;
+    width:calc(var(--bw) * 1px * var(--u)); display:flex; flex-direction:column; align-items:center;
+    transform-origin:50% 100%; transform:rotate(var(--rot)); transform-style:preserve-3d; transition:transform .22s cubic-bezier(.2,.8,.2,1); }
+  .bt::before { content:""; position:absolute; left:14%; right:-8%; top:34%; bottom:0; background:rgba(30,12,0,.34); filter:blur(3px); border-radius:6px 6px 2px 2px; transform:translateZ(-40px); pointer-events:none; }
+  .bt::after { content:""; position:absolute; left:-8%; right:-14%; bottom:-4px; height:9px; border-radius:50%; background:radial-gradient(ellipse at 42% 50%, rgba(25,10,0,.7), rgba(25,10,0,0) 72%); transform:translateZ(-1px); pointer-events:none; }
+  .bt:hover, .bt:focus-visible { outline:none; transform:rotate(var(--rot)) translateY(-5px) translateZ(14px); }
   .bt:focus-visible .body { box-shadow:0 0 0 2px var(--gold); }
-  .bt.sel { transform:translateY(-12px) translateZ(34px) scale(1.12); filter:drop-shadow(0 0 7px rgba(212,175,55,.95)); z-index:2; }
-  .bt .cap { display:block; width:68%; height:19px; border-radius:3px 3px 1px 1px; background:repeating-linear-gradient(90deg,#15151a 0 2px,#2a2a31 2px 3px); box-shadow:inset 0 2px 0 rgba(255,255,255,.12); }
-  .bt.cap-t .cap { height:24px; width:62%; }
-  .bt.cap-w .cap { background:repeating-linear-gradient(90deg,#f3f0ea 0 2px,#dcd8cf 2px 3px); box-shadow:inset 0 2px 0 rgba(255,255,255,.7), inset 0 -2px 0 rgba(0,0,0,.1); }
-  .bt .neck { display:block; width:46%; height:5px; background:#24140a; }
-  .bt .body { display:block; position:relative; width:100%; height:var(--bh); border-radius:6px 6px 3px 3px;
-    background:linear-gradient(90deg,rgba(0,0,0,.5),rgba(255,255,255,.2) 16%,rgba(255,255,255,0) 32%,rgba(0,0,0,.18) 72%,rgba(0,0,0,.55)), linear-gradient(180deg,#5b3517,#2a1507); }
-  .bt.gl-dark .body { background:linear-gradient(90deg,rgba(0,0,0,.5),rgba(255,255,255,.16) 16%,rgba(255,255,255,0) 32%,rgba(0,0,0,.18) 72%,rgba(0,0,0,.55)), linear-gradient(180deg,#2b1e17,#120c08); }
-  .bt.gl-clear .body { background:linear-gradient(90deg,rgba(0,0,0,.28),rgba(255,255,255,.4) 16%,rgba(255,255,255,0) 32%,rgba(0,0,0,.1) 72%,rgba(0,0,0,.32)), linear-gradient(180deg,#d4dde1,#aab7bc); }
-  .bt .lab { position:absolute; left:9%; right:9%; top:16%; bottom:9%; background:#f5f1e9; border-radius:2px; border-top:4px solid var(--c); display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; padding:1px; box-shadow:0 0 0 .5px rgba(0,0,0,.25); }
-  .bt .lab b { font-size:6.4px; line-height:1.15; font-weight:600; color:#2a1830; text-align:center; display:-webkit-box; -webkit-line-clamp:5; -webkit-box-orient:vertical; overflow:hidden; word-break:break-word; hyphens:auto; max-width:100%; }
-  .bt .lab em { font-style:normal; font-size:7px; font-weight:700; color:#8a6a10; margin-top:1px; }
+  .bt.sel { transform:rotate(0deg) translateY(-12px) translateZ(34px) scale(1.12); z-index:2; }
+  .bt.sel .body, .bt.sel .lab.ltp { box-shadow:0 0 0 2px rgba(212,175,55,.95), 0 0 16px rgba(212,175,55,.85); }
+  .bt .cap { display:block; width:70%; height:calc(var(--ch) * 1px * var(--u)); border-radius:3px 3px 1px 1px; position:relative;
+    background:repeating-linear-gradient(90deg,#0b0b0e 0 2px,#2e2e35 2px 3px,#17171b 3px 4px);
+    box-shadow:inset 0 2px 0 rgba(255,255,255,.2), inset 0 -4px 4px rgba(0,0,0,.55), inset 2px 0 2px rgba(255,255,255,.08); }
+  .bt .neck { display:block; width:52%; height:calc(5px * var(--u)); background:linear-gradient(90deg,#1b0d04,#7a4418 34%,#2a1407); border-top:1px solid rgba(255,214,150,.3); }
+  .bt .body { display:block; position:relative; width:100%; height:calc(var(--bh) * 1px * var(--u)); overflow:hidden; border-radius:40% 40% 5px 5px / 13% 13% 3px 3px;
+    background:linear-gradient(90deg, rgba(0,0,0,.66) 0, rgba(0,0,0,.08) 13%, rgba(255,214,150,.2) 24%, rgba(0,0,0,0) 38%, rgba(0,0,0,.2) 72%, rgba(0,0,0,.72) 100%), linear-gradient(180deg,#7a4418 0,#5a2f10 18%,#46230a 100%);
+    box-shadow:inset 0 -5px 4px -2px rgba(255,185,105,.32), 0 0 0 .5px rgba(0,0,0,.5); }
+  .bt .body::before { content:""; position:absolute; left:15%; width:10%; top:12%; bottom:9%; border-radius:6px; pointer-events:none;
+    background:linear-gradient(180deg,rgba(255,240,215,0),rgba(255,240,215,.6) 14%,rgba(255,240,215,.36) 82%,rgba(255,240,215,0)); }
+  .bt .body::after { content:""; position:absolute; left:0; right:0; top:0; height:var(--fill); pointer-events:none; border-bottom:1px solid rgba(255,214,150,.42);
+    background:linear-gradient(180deg,rgba(190,125,55,.5),rgba(190,125,55,.24)); }
+  .bt.gl-dark .body { background:linear-gradient(90deg, rgba(0,0,0,.7) 0, rgba(0,0,0,.1) 13%, rgba(255,214,150,.14) 24%, rgba(0,0,0,0) 38%, rgba(0,0,0,.22) 72%, rgba(0,0,0,.78) 100%), linear-gradient(180deg,#32231a,#150e09); }
+  .bt.gl-clear .body { background:linear-gradient(90deg, rgba(40,60,70,.5) 0, rgba(255,255,255,.35) 22%, rgba(255,255,255,.06) 40%, rgba(30,50,60,.22) 74%, rgba(25,45,55,.6) 100%), linear-gradient(180deg,#d3dde1,#b5c4cb); }
+  .bt.gl-clear .body::after { background:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,.12)); border-bottom-color:rgba(255,255,255,.6); }
+  .bt.gl-clear .neck { background:linear-gradient(90deg,#8a9aa1,#e4edf0 34%,#7b8b92); }
+  .bt.cap-w .cap { background:repeating-linear-gradient(90deg,#d9d6cf 0 2px,#f6f4ee 2px 3px,#e5e2da 3px 4px); box-shadow:inset 0 2px 0 rgba(255,255,255,.85), inset 0 -4px 4px rgba(90,80,60,.35), inset 2px 0 2px rgba(255,255,255,.4); }
+  .bt.k-drop .neck { height:calc(7px * var(--u)); width:64%; background:linear-gradient(90deg,#08080a,#33333a 30%,#08080a); border-top:0; }
+  .bt.k-drop .cap { width:46%; border-radius:46% 46% 16% 16% / 74% 74% 12% 12%;
+    background:radial-gradient(ellipse at 32% 28%, #66666f 0, #1d1d22 34%, #07070a 82%); box-shadow:inset 0 -4px 5px rgba(0,0,0,.6); }
+  .bt.k-jar .cap { width:100%; border-radius:4px 4px 1px 1px; background:repeating-linear-gradient(90deg,#d8d5ce 0 2px,#f8f6f1 2px 3px,#e4e1d9 3px 4px); box-shadow:inset 0 2px 0 rgba(255,255,255,.9), inset 0 -3px 3px rgba(90,80,60,.35); }
+  .bt.k-jar .neck { display:none; }
+  .bt.k-jar .body { border-radius:3px 3px 6px 6px; background:linear-gradient(90deg,#a9a8a4,#f1f0ec 20%,#fbfbf8 34%,#e3e2dd 68%,#9f9e9a); box-shadow:inset 0 -4px 4px rgba(120,110,90,.3), 0 0 0 .5px rgba(0,0,0,.35); }
+  .bt.k-jar .body::before, .bt.k-jar .body::after { display:none; }
+  /* étiquettes */
+  .bt .lab { position:absolute; left:8%; right:8%; top:calc(17% + var(--ly)); bottom:10%; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; padding:2px 1px 1px; background:#f6f2e9; border-radius:1px; box-shadow:0 0 0 .5px rgba(0,0,0,.28); }
+  .bt .lab::after { content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(90deg, rgba(0,0,0,.34), rgba(0,0,0,0) 20%, rgba(255,255,255,.2) 31%, rgba(0,0,0,0) 42%, rgba(0,0,0,0) 74%, rgba(0,0,0,.4)); }
+  .bt i { font-style:normal; }
+  .bt .lab b { font-weight:700; color:#1d1620; text-align:center; max-width:100%; line-height:1.3; padding:.5px 0; display:-webkit-box; -webkit-box-orient:vertical; overflow:hidden; word-break:break-word; hyphens:auto; }
+  .bt .lab.chem b { font-size:5.4px; letter-spacing:.02em; text-transform:uppercase; -webkit-line-clamp:4; }
+  .bt .lab.chem u { display:block; width:78%; height:7px; margin-top:2px; background:repeating-linear-gradient(180deg,rgba(40,30,45,.5) 0 1px,transparent 1px 2.4px); }
+  .bt .lab.chem s { display:block; width:5px; height:5px; margin:3px auto 0; border:1px solid #c0262d; background:#fff; transform:rotate(45deg); }
+  .bt .lab.band { border-top:5px solid var(--c); background:linear-gradient(180deg,#fbf9f3,#efeadc); }
+  .bt .lab.band b { font-size:6px; font-weight:600; -webkit-line-clamp:5; }
+  .bt .lab.ltp { left:4%; right:4%; top:calc(25% + var(--ly)); bottom:auto; min-height:30%; max-height:66%; overflow:hidden; padding:3px 2px; border-radius:0; background:linear-gradient(180deg,#eadfb4,#ddd0a0); transform:rotate(calc(var(--rot) * -1 - .8deg)); box-shadow:0 1px 1px rgba(0,0,0,.35); clip-path:polygon(0 4%,3% 0,6% 4%,9% 0,100% 0,100% 96%,97% 100%,94% 96%,91% 100%,0 100%); }
+  .bt .lab.ltp::after { background:linear-gradient(90deg, rgba(0,0,0,.2), rgba(0,0,0,0) 22%, rgba(0,0,0,0) 78%, rgba(0,0,0,.26)); }
+  .bt .lab.ltp { display:block; text-align:center; }
+  .bt .lab.ltp b { display:block; width:100%; overflow:visible; overflow-wrap:anywhere; font-family:'Homemade Apple','Segoe Script',cursive; font-weight:400; font-size:5.6px; color:#1c2a63; line-height:1.35; }
+  .bt .lab em { font-style:normal; font-family:'Homemade Apple',cursive; font-size:6px; color:#1c2a63; }
+  .bt.k-jar .lab { background:#fff; box-shadow:0 0 0 .6px rgba(0,0,0,.5); top:calc(18% + var(--ly)); }
+  .shelf-hint { margin:.9rem 0 0; text-align:center; font-size:.82rem; color:var(--ink-soft); }
   .shelf-info { position:sticky; bottom:10px; z-index:15; margin-top:16px; padding:.8rem 1rem; border:1px solid var(--gold); border-radius:6px; background:var(--panel); box-shadow:0 6px 22px var(--shadow);
     display:flex; gap:.7rem 1.2rem; align-items:center; justify-content:space-between; flex-wrap:wrap; font-size:.86rem; color:var(--ink-soft); }
   .shelf-info.idle { position:static; border-style:dashed; border-color:var(--line); box-shadow:none; justify-content:center; text-align:center; }
   .shelf-info .si-name { font-family:'Marcellus',Georgia,serif; font-size:1.12rem; color:var(--ink); }
   .shelf-info .si-meta { margin-top:.2rem; line-height:1.45; }
-  @media (max-width:640px) {
-    .shelf3d { --w:34px; --post:16px; --crest:50px; --d:46px; --plinth:24px; padding:16px 6px 28px; }
-    .shelf3d .bottles { gap:4px; padding:6px 8px 0; min-height:80px; }
-    .bt.sz-s { --bh:42px; } .bt { --bh:50px; } .bt.sz-l { --bh:60px; }
-    .bt .cap { height:15px; } .bt.cap-t .cap { height:19px; }
-    .bt .lab b { font-size:5.2px; } .bt .lab em { font-size:6px; }
-    .shelf3d .tier-note span { font-size:.68rem; } .shelf3d .plate { font-size:.7rem; padding:.2rem .8rem; }
+  @media (max-width:700px) {
+    .shelf3d { --post:16px; --crest:50px; --d:46px; --plinth:24px; padding:16px 6px 28px; }
+    .shelf3d .bottles { padding:6px 8px 0; }
+    .shelf3d .tier-note span { font-size:.66rem; } .shelf3d .plate { font-size:.68rem; padding:.2rem .8rem; }
   }
   @media (prefers-reduced-motion: reduce) { .shelf3d .cab, .bt { transition:none; } }
 </style>
@@ -802,7 +842,7 @@ const I18N = {
     rit_warn: "Attention : ne frottez pas l'eau de parfum après la vaporisation, cela brise les molécules volatiles de certaines notes.", home_contact: "Une question ? Contactez la Maison :",
     cr_foret: "forêt", cr_coffre: "coffre", home_credits: "Fond de forêt : photographie Wikimedia Commons, sous licence libre. Auteur et licence sur la page liée :",
     nav_catalog: "Matières premières", catalog_title: "Nos matières premières",
-    catalog_sub: "Parcourez la palette olfactive de la Maison. Touchez une matière pour découvrir son rôle et son impact dans une formule.",
+    catalog_sub: "L'étagère de la Maison : notes de tête en haut, de cœur au milieu, de fond en bas. Touchez un flacon pour découvrir son rôle et son impact dans une formule.",
     catalog_search: "Rechercher une matière…", catalog_all: "Toutes", catalog_count: "{n} matières", catalog_none: "Aucune matière ne correspond.",
     mat_role: "Son rôle dans une formule", mat_impact: "Son impact", mat_pairs: "Se marie bien avec", mat_profile: "Profil olfactif",
     mat_purity: "Pureté", mat_ifra: "Dosage max indicatif", mat_vol: "Volatilité", mat_vol_lo: "tenace", mat_vol_hi: "fugace", mat_close: "Fermer",
@@ -876,6 +916,7 @@ const I18N = {
     view_shelf: "Étagère", view_list: "Liste",
     shelf_hint: "Touchez un flacon pour voir ses détails, le modifier ou le retirer.",
     shelf_open: "Ouvrir la fiche",
+    shelf_hint_client: "Touchez un flacon pour ouvrir sa fiche.",
     lib_saved_at: "Enregistré à {h}",
     lib_subtitle: "La base de départ pour composer vos formules. Ajoutez, modifiez ou retirez des matières au fil de votre travail — tout reste enregistré dans ce navigateur. Cliquez sur le nom d'une matière pour ouvrir sa fiche.",
     data_title: "Sauvegarde & export",
@@ -1200,7 +1241,7 @@ const I18N = {
     rit_warn: "Warning: do not rub the eau de parfum after spraying, as this breaks down the volatile molecules of certain notes.", home_contact: "A question? Contact the House:",
     cr_foret: "forest", cr_coffre: "chest", home_credits: "Forest backdrop: Wikimedia Commons photograph, under a free licence. Author and licence on the linked page:",
     nav_catalog: "Raw materials", catalog_title: "Our raw materials",
-    catalog_sub: "Browse the House's olfactive palette. Tap a material to discover its role and its impact in a formula.",
+    catalog_sub: "The House's shelf: top notes above, heart notes in the middle, base notes below. Tap a bottle to discover its role and its impact in a formula.",
     catalog_search: "Search a material…", catalog_all: "All", catalog_count: "{n} materials", catalog_none: "No material matches.",
     mat_role: "Its role in a formula", mat_impact: "Its impact", mat_pairs: "Pairs well with", mat_profile: "Olfactive profile",
     mat_purity: "Purity", mat_ifra: "Indicative max dosage", mat_vol: "Volatility", mat_vol_lo: "tenacious", mat_vol_hi: "fleeting", mat_close: "Close",
@@ -1274,6 +1315,7 @@ const I18N = {
     view_shelf: "Shelf", view_list: "List",
     shelf_hint: "Tap a bottle to see its details, edit it or remove it.",
     shelf_open: "Open sheet",
+    shelf_hint_client: "Tap a bottle to open its sheet.",
     lib_saved_at: "Saved at {h}",
     lib_subtitle: "The starting base for composing your formulas. Add, edit or remove materials as you work — everything stays saved in this browser. Click a material's name to open its sheet.",
     data_title: "Backup & export",
@@ -2053,10 +2095,7 @@ function catalogGridHTML() {
   const list = catalogItems();
   const cnt = document.getElementById("cat-count"); if (cnt) cnt.textContent = t("catalog_count", { n: list.length });
   if (!list.length) return `<div class="empty">${t("catalog_none")}</div>`;
-  return `<div class="cat-grid">${list.map(m => {
-    const d = String((Array.isArray(m.descriptors) ? m.descriptors.join(",") : m.descriptors) || "").split(",").map(x => x.trim()).filter(Boolean).slice(0, 3).join(" · ");
-    return `<button type="button" class="cat-item" style="--c:${FAM_COLORS[m.family] || "#999"}" data-mat="${escapeHtml(m.id)}"><b>${escapeHtml(m.name)}</b><small>${escapeHtml(familyLabel(m.family))}</small><small>${escapeHtml(d)}</small><span class="cat-pos">${posLabel(m.position)}</span></button>`;
-  }).join("")}</div>`;
+  return shelfHTML(list, { id: "shelf3d-c", client: true }) + `<p class="shelf-hint">${t("shelf_hint_client")}</p>`;
 }
 function renderCatalog() {
   const el = document.getElementById("tab-catalog");
@@ -2071,8 +2110,10 @@ function renderCatalog() {
     </div>
     <div id="cat-grid">${catalogGridHTML()}</div>`;
   document.getElementById("cat-count").textContent = t("catalog_count", { n: catalogItems().length });
-  document.getElementById("cat-filter").addEventListener("input", e => { catalogFilter = e.target.value; document.getElementById("cat-grid").innerHTML = catalogGridHTML(); });
+  shelfRedraw = () => { const g = document.getElementById("cat-grid"); if (g) g.innerHTML = catalogGridHTML(); };
+  document.getElementById("cat-filter").addEventListener("input", e => { catalogFilter = e.target.value; shelfRedraw(); });
   el.querySelectorAll(".cat-fam").forEach(b => b.addEventListener("click", () => { catalogFamily = b.dataset.fam; renderCatalog(); }));
+  shelfTilt(el); shelfWatch(); requestAnimationFrame(shelfFit);
 }
 /* ====== Accueil : le carnet du parfumeur (photos, parchemin, anneau 3D) ====== */
 const HORSE_D = "M-14 24 C-15 14 -13 6 -9 -1 C-9 -7 -10 -13 -8 -19 L-5 -24 L-3 -17 C-1 -17 1 -16 3 -14 C8 -9 14 -2 19 7 C21 10 22 13 20 16 C18 18 15 17 13 16 C11 15 9 15 8 17 C6 20 3 22 -2 24 Z";
@@ -2938,22 +2979,78 @@ let libraryFilterFocused = false;
 let libraryView = "shelf";
 try { if (localStorage.getItem("orgue_lib_view") === "list") libraryView = "list"; } catch (e) {}
 let shelfSelId = null;
-let shelfCap = (typeof window !== "undefined" && window.innerWidth < 700) ? 7 : 19;
+let shelfInner = (typeof window !== "undefined" && window.innerWidth < 700) ? 250 : 900;
+let shelfRedraw = null;
+function shelfScale() { return (typeof window !== "undefined" && window.innerWidth < 700) ? 0.82 : 1; }
 function shelfHash(str) { let h = 0; str = String(str || ""); for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0; return h; }
 function shelfShortName(name) {
   const n = String(name || "").replace(/\s*\([^)]*\)/g, "").replace(/\s*\d+(?:[.,]\d+)?\s*%/g, "").replace(/\s+/g, " ").trim();
   return n || String(name || "");
 }
-function bottleHTML(m) {
-  const h = shelfHash(m.id || m.name);
-  const purity = m.purity ?? 100;
-  const diluted = purity < 100;
-  const capCls = diluted ? "cap-w" : (h % 4 === 0 ? "cap-t" : "cap-b");
-  const size = ["s", "m", "l"][h % 3];
-  const glass = m.family === "Support" ? "clear" : (h % 5 === 0 ? "dark" : "amber");
-  const col = FAM_COLORS[m.family] || "#999";
-  const sel = shelfSelId === m.id;
-  return `<button type="button" class="bt ${capCls} sz-${size} gl-${glass}${sel ? " sel" : ""}" style="--c:${col}" data-bt="${escapeHtml(m.id)}" title="${escapeHtml(m.name)}" aria-label="${escapeHtml(m.name)}" aria-pressed="${sel}"><i class="cap"></i><i class="neck"></i><i class="body"><i class="lab"><b>${escapeHtml(shelfShortName(m.name))}</b>${diluted ? `<em>${purity}%</em>` : ""}</i></i></button>`;
+const SHELF_JAR = /^(calone|exaltolide|ethylene brassylate|ambroxide)\b(?!.*%)/i;
+const SHELF_BULK = /^(hedione|iso e super|galaxolide|habanolide|cashmeran|musc blanc|muscenone)\b/i;
+const SHELF_SOLV = /^(dpg|tec|éthanol|ethanol|benzyl)/i;
+const SHELF_NAT = /\bHE\b|\(HE|essential oil|absol|\bSFE\b|\bSCFE\b|concrete|^(lavande|bergamote|pamplemousse|camphre|cannelle|patchouli|vétiver|noisettes|tabac)\b/i;
+const SHELF_OWN = /accord|mashmellow/i;
+/* Chaque matière a toujours le même flacon : contenant, taille, étiquette, petite inclinaison, espacement. */
+function bottleSpec(m) {
+  const name = String(m.name || ""), h = shelfHash(name);
+  const diluted = (m.purity ?? 100) < 100;
+  const sp = { kind: "amber", w: 40, bh: 58, ch: 19, glass: "amber", cap: "b", label: "chem", rot: 0, ml: 2 + h % 6, ly: ((h >>> 5) % 5) - 2, fill: 10 + ((h >>> 7) % 12) };
+  const r = (h >>> 9) % 20;
+  if (SHELF_JAR.test(name) && !diluted) Object.assign(sp, { kind: "jar", w: 58, bh: 40, ch: 13, glass: "jar", cap: "jar" });
+  else if (SHELF_SOLV.test(name)) Object.assign(sp, /^(dpg|tec|éthanol|ethanol)/i.test(name) ? { w: 62, bh: 100, ch: 24 } : { w: 54, bh: 84, ch: 22 }, { glass: "clear", cap: "w", label: "band" });
+  else {
+    if (SHELF_BULK.test(name) && !diluted) Object.assign(sp, { w: 54, bh: 84, ch: 22 });
+    else if (SHELF_NAT.test(name) && !diluted && !SHELF_OWN.test(name)) Object.assign(sp, { kind: "drop", w: 44, bh: 66, ch: 30, label: "band" });
+    else if (r < 2) Object.assign(sp, { w: 34, bh: 44, ch: 15 });
+    else if (r >= 13 && r < 18) Object.assign(sp, { w: 44, bh: 66, ch: 20 });
+    else if (r >= 18) Object.assign(sp, { w: 54, bh: 84, ch: 22 });
+    if (diluted) sp.cap = "w";
+    if (diluted || SHELF_OWN.test(name)) sp.label = "tape";
+    if (!diluted && (h >>> 11) % 6 === 0) sp.glass = "dark";
+  }
+  const q = (h >>> 13) % 24;
+  sp.rot = q === 0 ? 2.4 : q === 1 ? -2 : (q < 7 ? ((q % 3) - 1) * 0.7 : 0);
+  if ((h >>> 17) % 11 === 0) sp.ml += 12;
+  return sp;
+}
+function bottleHTML(m, sp, first, client) {
+  const purity = m.purity ?? 100, diluted = purity < 100;
+  const sel = !client && shelfSelId === m.id;
+  const nm = escapeHtml(shelfShortName(m.name));
+  const lab = sp.label === "tape" ? `<i class="lab ltp"><b>${nm}</b>${diluted ? `<em>${purity}%</em>` : ""}</i>`
+    : sp.label === "band" ? `<i class="lab band"><b>${nm}</b></i>`
+    : `<i class="lab chem"><b>${nm}</b><u></u><s></s></i>`;
+  const attr = client ? `data-mat="${escapeHtml(m.id)}"` : `data-bt="${escapeHtml(m.id)}" aria-pressed="${sel}"`;
+  const style = `--c:${FAM_COLORS[m.family] || "#999"};--bw:${sp.w};--bh:${sp.bh};--ch:${sp.ch};--rot:${sp.rot}deg;--ml:${first ? 0 : sp.ml}px;--ly:${sp.ly}px;--fill:${sp.fill}%`;
+  return `<button type="button" class="bt k-${sp.kind} cap-${sp.cap} gl-${sp.glass}${sel ? " sel" : ""}" style="${style}" ${attr} title="${escapeHtml(m.name)}" aria-label="${escapeHtml(m.name)}"><i class="cap"></i><i class="neck"></i><i class="body">${lab}</i></button>`;
+}
+function shelfRows(items) {
+  const rows = [], u = shelfScale(); let cur = [], used = 0;
+  items.forEach(m => {
+    const sp = bottleSpec(m), w = sp.w * u + sp.ml;
+    if (cur.length && used + w > shelfInner) { rows.push(cur); cur = []; used = 0; }
+    cur.push([m, sp]); used += w;
+  });
+  if (cur.length) rows.push(cur);
+  return rows;
+}
+function shelfHTML(list, opts) {
+  opts = opts || {};
+  const famIdx = f => { const i = FAMILIES.indexOf(f); return i < 0 ? 99 : i; };
+  const by = { top: [], heart: [], base: [] };
+  list.forEach(m => (by[m.position] || by.heart).push(m));
+  const tiers = ["top", "heart", "base"].map(k => {
+    const items = by[k].slice().sort((a, b) => famIdx(a.family) - famIdx(b.family) || String(a.name).localeCompare(String(b.name), "fr", { sensitivity: "base" }));
+    let rows = items.length ? "" : `<div class="srow"><div class="bottles"></div><div class="plank"></div></div>`;
+    shelfRows(items).forEach(row => { rows += `<div class="srow"><div class="bottles">${row.map(([m, sp], i) => bottleHTML(m, sp, i === 0, opts.client)).join("")}</div><div class="plank"></div></div>`; });
+    return `<div class="tier tier-${k}"><div class="tier-note"><span>${t("shelf_" + k)} · ${items.length}</span></div>${rows}</div>`;
+  }).join("");
+  return `<div class="shelf3d" id="${opts.id || "shelf3d"}" style="--u:${shelfScale()}"><div class="cab">
+    <div class="crest"><span class="plate">Maison Aïnâri</span></div><div class="post l"></div><div class="post r"></div><div class="plinth"></div>
+    <div class="cab-in"><div class="w w-back"></div><div class="w w-l"></div><div class="w w-r"></div><div class="w w-t"></div>${tiers}</div>
+  </div></div>`;
 }
 function shelfInfoHTML(list) {
   const m = shelfSelId ? list.find(x => x.id === shelfSelId) : null;
@@ -2967,23 +3064,6 @@ function shelfInfoHTML(list) {
       <button class="btn secondary small" type="button" data-edit="${m.id}">${t("btn_edit")}</button>
       <button class="btn secondary small" type="button" data-del="${m.id}">${t("btn_remove")}</button>
     </div></div>`;
-}
-function shelfHTML(list) {
-  const famIdx = f => { const i = FAMILIES.indexOf(f); return i < 0 ? 99 : i; };
-  const by = { top: [], heart: [], base: [] };
-  list.forEach(m => (by[m.position] || by.heart).push(m));
-  const cap = Math.max(3, shelfCap);
-  const tiers = ["top", "heart", "base"].map(k => {
-    const items = by[k].slice().sort((a, b) => famIdx(a.family) - famIdx(b.family) || String(a.name).localeCompare(String(b.name), "fr", { sensitivity: "base" }));
-    let rows = "";
-    if (!items.length) rows = `<div class="srow"><div class="bottles"></div><div class="plank"></div></div>`;
-    for (let i = 0; i < items.length; i += cap) rows += `<div class="srow"><div class="bottles">${items.slice(i, i + cap).map(bottleHTML).join("")}</div><div class="plank"></div></div>`;
-    return `<div class="tier tier-${k}"><div class="tier-note"><span>${t("shelf_" + k)} · ${items.length}</span></div>${rows}</div>`;
-  }).join("");
-  return `<div class="shelf3d" id="shelf3d"><div class="cab">
-    <div class="crest"><span class="plate">Maison Aïnâri</span></div><div class="post l"></div><div class="post r"></div><div class="plinth"></div>
-    <div class="cab-in"><div class="w w-back"></div><div class="w w-l"></div><div class="w w-r"></div><div class="w w-t"></div>${tiers}</div>
-  </div></div>`;
 }
 function listHTML(list) {
   const rows = list.slice().sort(byPositionThenPercent);
@@ -3016,14 +3096,21 @@ function refreshShelf() {
   slot.innerHTML = shelfBodyHTML(libVisible());
 }
 function shelfFit() {
-  const sh = document.getElementById("shelf3d"); if (!sh) return;
+  const sh = document.querySelector("main section.active .shelf3d"); if (!sh) return;
   const b = sh.querySelector(".bottles"); if (!b || !b.clientWidth) return;
   const cs = getComputedStyle(b);
-  const inner = b.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-  const gap = parseFloat(cs.columnGap) || 5;
-  const bw = (sh.querySelector(".bt") || {}).offsetWidth || 42;
-  const cap = Math.max(3, Math.floor((inner + gap) / (bw + gap)));
-  if (cap !== shelfCap) { shelfCap = cap; refreshShelf(); }
+  const inner = Math.floor(b.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight));
+  if (Math.abs(inner - shelfInner) > 1) { shelfInner = inner; if (shelfRedraw) shelfRedraw(); }
+}
+function shelfTilt(el) {
+  el.onpointermove = e => {
+    const sh = el.querySelector(".shelf3d");
+    if (!sh || e.pointerType === "touch" || !window.matchMedia("(prefers-reduced-motion: no-preference)").matches) return;
+    const r = sh.getBoundingClientRect();
+    sh.style.setProperty("--ry", (((e.clientX - r.left) / r.width - .5) * 6).toFixed(2) + "deg");
+    sh.style.setProperty("--rx", ((-((e.clientY - r.top) / r.height - .5)) * 1.6).toFixed(2) + "deg");
+  };
+  el.onpointerleave = () => { const sh = el.querySelector(".shelf3d"); if (sh) { sh.style.setProperty("--ry", "0deg"); sh.style.setProperty("--rx", "0deg"); } };
 }
 function libClick(e) {
   const bt = e.target.closest("[data-bt]");
@@ -3044,6 +3131,11 @@ function libClick(e) {
   }
 }
 let shelfFitTimer = null, shelfObserver = null;
+function shelfWatch() {
+  if (shelfObserver || !window.ResizeObserver) return;
+  shelfObserver = new ResizeObserver(() => { clearTimeout(shelfFitTimer); shelfFitTimer = setTimeout(shelfFit, 120); });
+  const mainEl = document.querySelector("main"); if (mainEl) shelfObserver.observe(mainEl);
+}
 
 function renderLibrary() {
   const el = document.getElementById("tab-library");
@@ -3152,18 +3244,9 @@ function renderLibrary() {
   filterInput.addEventListener("focus", () => { libraryFilterFocused = true; });
   filterInput.addEventListener("blur", () => { libraryFilterFocused = false; });
   el.onclick = libClick;
-  el.onpointermove = e => {
-    const sh = document.getElementById("shelf3d");
-    if (!sh || e.pointerType === "touch" || !window.matchMedia("(prefers-reduced-motion: no-preference)").matches) return;
-    const r = sh.getBoundingClientRect();
-    sh.style.setProperty("--ry", (((e.clientX - r.left) / r.width - .5) * 6).toFixed(2) + "deg");
-    sh.style.setProperty("--rx", ((-((e.clientY - r.top) / r.height - .5)) * 1.6).toFixed(2) + "deg");
-  };
-  el.onpointerleave = () => { const sh = document.getElementById("shelf3d"); if (sh) { sh.style.setProperty("--ry", "0deg"); sh.style.setProperty("--rx", "0deg"); } };
-  if (!shelfObserver && window.ResizeObserver) {
-    shelfObserver = new ResizeObserver(() => { clearTimeout(shelfFitTimer); shelfFitTimer = setTimeout(shelfFit, 120); });
-    shelfObserver.observe(el);
-  }
+  shelfRedraw = refreshShelf;
+  shelfTilt(el);
+  shelfWatch();
   requestAnimationFrame(shelfFit);
   document.getElementById("export-data-btn").addEventListener("click", () => {
     const payload = { app: "orgue", exportedAt: new Date().toISOString(), materials, formulas, drafts, analyses, submissions };
